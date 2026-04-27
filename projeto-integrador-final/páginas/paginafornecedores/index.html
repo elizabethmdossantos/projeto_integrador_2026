@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truck Gestão - Fornecedores</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-light">
+ <header class="header bg-white shadow-sm">
+        <div class="container-fluid container-lg">
+            <nav class="navbar navbar-expand-lg fixed-top bg-white w-100 p-3">
+                <div class="d-flex align-items-center">
+                <p class="logonav mb-0 me-2"><img src="../imagens/logo1.jpeg" width="auto" height="90" alt="logo truckGestão"></p>
+                </div>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav align-items-center">
+                   
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary me-3" href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary me-3" href="../cadastrodeproduto/"><i class="bi bi-box-seam"></i> Cadastro de Itens</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary me-3" href="../paineldeprodutos/index.html"><i class="bi bi-list-check"></i> Lista de Produtos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-secondary me-3" href="#"><i class="bi bi-bar-chart-line"></i> Relatórios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger me-3 fw-bold" href="../paginafornecedores/index.html"><i class="bi bi-bag-check"></i> Fornecedores</a>
+                        </li>
+                        <li class="nav-item d-flex align-items-center mt-2 mt-lg-0">
+                            <button class="btn btn-outline-danger me-2"><i class="bi bi-person"></i> Administrador</button>
+                            <button class="btn btn-primary"><i class="bi bi-box-arrow-right"></i> Sair</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <br>
+    <main class="container my-4">
+        
+        <h1 class="h3 fw-bold mb-4">Encontre Fornecedores</h1>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <label for="supplier-filter" class="form-label fw-medium mb-0">Filtrar por tipo de produto:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <select class="form-select" id="supplier-filter">
+                            <option value="todos" selected>Mostrar todas as categorias</option>
+                            <option value="hortifruti">Hortifruti</option>
+                            <option value="carnes">Carnes e Frios</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="embalagens">Embalagens e Descartáveis</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="supplier-list">
+
+            <div class="col supplier-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="../imagens/hortifruti.png" class="card-img-top" alt="Hortifruti">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2" data-category="hortifruti">Hortifruti</span>
+                        <h5 class="card-title fw-bold">Verde Perto Distribuidora</h5>
+                        <p class="card-text text-muted small">Fornecedor local de frutas, verduras e legumes frescos, ideal para sucos e acompanhamentos.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="#" class="btn btn-outline-danger w-100">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col supplier-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="../imagens/carnes.png" class="card-img-top" alt="Carnes">
+                    <div class="card-body">
+                        <span class="badge bg-danger mb-2" data-category="carnes">Carnes e Frios</span>
+                        <h5 class="card-title fw-bold">Rei do Hambúrguer</h5>
+                        <p class="card-text text-muted small">Blends de carne bovina e suína, pães artesanais e frios. Perfeito para hamburguerias.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="#" class="btn btn-outline-danger w-100">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col supplier-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="../imagens/embalagens.png" class="card-img-top" alt="Embalagens">
+                    <div class="card-body">
+                        <span class="badge bg-secondary mb-2" data-category="embalagens">Embalagens</span>
+                        <h5 class="card-title fw-bold">Pratic Embalagens</h5>
+                        <p class="card-text text-muted small">Caixas para delivery, sacolas, copos, talheres descartáveis e guardanapos.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="#" class="btn btn-outline-danger w-100">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col supplier-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="../imagens/bebidas.png" class="card-img-top" alt="Bebidas">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2" data-category="bebidas">Bebidas</span>
+                        <h5 class="card-title fw-bold">Distribuidora Gela Rápido</h5>
+                        <p class="card-text text-muted small">Refrigerantes, sucos naturais, cervejas artesanais e água mineral. Entrega expressa.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="#" class="btn btn-outline-danger w-100">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col supplier-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="../imagens/carnesefrios.png" class="card-img-top" alt="Carnes">
+                    <div class="card-body">
+                        <span class="badge bg-danger mb-2" data-category="carnes">Carnes e Frios</span>
+                        <h5 class="card-title fw-bold">Friomix Laticínios</h5>
+                        <p class="card-text text-muted small">Queijos especiais (cheddar, prato, muçarela), bacon e embutidos em geral.</p>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <a href="#" class="btn btn-outline-danger w-100">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="mb-5"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NN5SrVh2JQdEtW+YfMXTiCC75mWl5VkfeUKN/9Ig" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
