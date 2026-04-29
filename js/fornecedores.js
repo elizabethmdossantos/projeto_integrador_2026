@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
 
     const filterSelect = document.getElementById('supplier-filter');
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                     card.style.display = 'block'; 
                 } else {
-         
+        
                     card.style.display = 'none';
                 }
             });
