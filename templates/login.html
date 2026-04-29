@@ -14,8 +14,8 @@
     
     <header class="header bg-white shadow-sm">
         <div class="container-fluid container-lg">
-            <nav class="navbar navbar-expand-lg fixed-top bg-white w-100">
-                    <p class="logonav mb-0 me-2"><img src="../imagens/logo1.jpeg" width="auto" height="90" alt="logo truckGestão"></p>
+            <nav class="navbar navbar-expand-lg bg-white w-100">
+                    <p class="logonav mb-0 me-2"><img src="../static/img/logo1.jpeg" width="auto" height="90" alt="logo truckGestão"></p>
                 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,8 +35,8 @@
                         </li>
                         
                         <li class="nav-item d-flex align-items-center mt-2 mt-lg-0">
-                            <button class="btn btn-outline-danger me-2">Acessar</button>
-                            <button class="btn btn-danger">Teste Grátis</button>
+                            <button class="btn btn-outline-danger me-2"><a href="login.html" style="text-decoration: none; color: red;">Acessar</a></button>
+                            <button class="btn btn-danger"><a href="cadastro.html" style="text-decoration: none; color: white;">Teste Grátis</a></button>
                         </li>
                     </ul>
                 </div>
@@ -51,7 +51,7 @@
                 <div class="form-card">
                     <h2 class="text-center mb-2 text-danger fw-bold"><i class="bi bi-truck me-2"></i>TruckGestão</h2>
                     
-                  
+                
                     <form action="#" method="POST" class="needs-validation" novalidate>
 
                         <div class="mb-3">
@@ -64,16 +64,16 @@
 
                         <div class="mb-3">
                             <label for="cnpj" class="form-label fw-bold">CNPJ <span class="text-danger">*</span></label>
-                           
+                        
                             <input type="text" class="form-control rounded-2" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" pattern="\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}" required>
                             <div class="invalid-feedback">
                                 Por favor, insira um CNPJ válido.
                             </div>
                         </div>
 
-                                                <div class="d-grid gap-2 mt-5">
+                        <div class="d-grid gap-2 mt-5">
                             <button class="btn btn-danger btn-lg rounded-2 shadow-sm" type="submit">
-                                <i class="bi bi-check-circle me-2"></i> Cadastrar e Iniciar Teste Grátis
+                                <i class="bi bi-check-circle me-2"></i><a href="cadastro_produto.html"></a>Cadastrar e Iniciar Teste Grátis
                             </button>
                         </div>
                         
