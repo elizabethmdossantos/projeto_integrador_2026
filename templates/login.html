@@ -12,38 +12,57 @@
 
 <body>
     
-    <header class="header bg-white shadow-sm">
-        <div class="container-fluid container-lg">
-            <nav class="navbar navbar-expand-lg bg-white w-100">
-                    <p class="logonav mb-0 me-2"><img src="../static/img/logo1.jpeg" width="auto" height="90" alt="logo truckGestão"></p>
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <header class="header bg-white shadow-sm sticky-top p-1">
+    <header class="header bg-white shadow-sm sticky-top py-2">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light p-0">
+                <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                    <img src="../static/img/logo1.jpeg" style="width: 150px; height: auto; max-height: 80px; object-fit: contain;">
+                </a>
+
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav align-items-center">
-                        
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
                         <li class="nav-item">
-                            <a class="nav-link text-secondary me-3" href="#foco-mobile">Food Truck</a>
+                            <a class="nav-link active fw-semibold px-3" href="dashboard.html">
+                                <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-secondary me-3" href="#modulos">Módulos</a>
+                            <a class="nav-link text-muted px-3" href="cadastro_produto.html">
+                                <i class="bi bi-box-seam me-1"></i> Cadastro de Itens
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-secondary me-3" href="#planos">Planos</a>
+                            <a class="nav-link text-muted px-3" href="painel_produtos.html">
+                                <i class="bi bi-list-check me-1"></i> Produtos
+                            </a>
                         </li>
-                        
-                        <li class="nav-item d-flex align-items-center mt-2 mt-lg-0">
-                            <button class="btn btn-outline-danger me-2"><a href="login.html" style="text-decoration: none; color: red;">Acessar</a></button>
-                            <button class="btn btn-danger"><a href="cadastro.html" style="text-decoration: none; color: white;">Teste Grátis</a></button>
+                        <li class="nav-item">
+                            <a class="nav-link text-muted px-3" href="fornecedores.html">
+                                <i class="bi bi-bag-check me-1"></i> Fornecedores
+                            </a>
+                        </li>
+
+                        <div class="vr mx-3 d-none d-lg-block" style="height: 30px;"></div>
+                        <hr class="d-lg-none my-3">
+
+                        <li class="nav-item d-flex gap-2">
+                            <button class="btn btn-light btn-sm fw-medium border">
+                                <i class="bi bi-person-circle"></i> Admin
+                            </button>
+                            <a href="index.html" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-box-arrow-right"></i> Sair
+                            </a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </div>
     </header>
-    
 
     <main class="container my-5">
         <div class="row justify-content-center">
