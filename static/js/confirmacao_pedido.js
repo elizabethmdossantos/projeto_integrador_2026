@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             actionButtonCard.innerHTML = '<div class="card-body text-center text-success"><h5 class="mb-0"><i class="bi bi-check-circle-fill"></i> Pedido Aceito</h5></div>';
 
-  
+
             window.scrollTo(0, 0);
         });
     }
@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (rejectButton) {
         rejectButton.addEventListener('click', () => {
-       
+    
             const reason = prompt("Qual o motivo para rejeitar este pedido? (Opcional)");
 
             createAlert(`<strong>Atenção!</strong> O ${orderId} foi rejeitado.`, 'warning');
 
             actionButtonCard.innerHTML = '<div class="card-body text-center text-danger"><h5 class="mb-0"><i class="bi bi-x-circle-fill"></i> Pedido Rejeitado</h5></div>';
 
-         
+        
             window.scrollTo(0, 0);
         });
     }
