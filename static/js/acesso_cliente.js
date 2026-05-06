@@ -1,26 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Inicializa o carrinho vazio ou recupera o existente
+let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
-    const verMaisBtn = document.getElementById('ver-mais-btn');
-    const searchInput = document.getElementById('cardapio-search');
+document.querySelectorAll('.btn-warning').forEach((botao, index) => {
+    botao.addEventListener('click', () => {
+        const card = botao.closest('.card-body');
+        const nome = card.querySelector('.card-title').innerText;
+        const precoTexto = card.querySelector('.product-price').innerText;
+        const preco = parseFloat(precoTexto.replace(',', '.'));
 
-    if (verMaisBtn) {
-        verMaisBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            alert('Botão "Ver mais" foi clicado!');
-        });
-    }
-
-    if (searchInput) {
-        searchInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (searchInput.value) {
-                    alert('Você buscou por: ' + searchInput.value);
-                } else {
-                    alert('Por favor, digite algo para buscar.');
-                }
-            }
-        });
-    }
-
+        // Adiciona ao array
+        carrinho.push({ nome, preco });
+        
+        // Salva no LocalStorage
+        localStorage.setItem('carrinho', JSON.stringify(carrinho));
+        
+        alert(`${nome} adicionado ao carrinho!`);
+    });
 });

@@ -1,45 +1,62 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const paymentOptions = document.querySelectorAll('#payment-options .list-group-item');
-    const allPaymentDetails = document.querySelectorAll('.payment-details');
-    const confirmButton = document.getElementById('confirmar-pedido-btn');
+    const listaItens = document.querySelector('.list-group-flush');
+    const checkoutSubtotal = document.getElementById('checkout-subtotal');
+    const checkoutTotal = document.getElementById('checkout-total');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    const taxaEntrega = 5.00;
 
-    // Lógica de Seleção de Pagamento
-    paymentOptions.forEach(option => {
-        option.addEventListener('click', (e) => {
+    function renderizarCarrinho() {
+        if (carrinho.length === 0) {
+            listaItens.innerHTML = '<li class="list-group-item">Carrinho vazio</li>';
+            return;
+        }
+
+        listaItens.innerHTML = '';
+        let subtotal = 0;
+
+        carrinho.forEach(item => {
+            subtotal += item.preco;
+            listaItens.innerHTML += `
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                    <span>(1x) ${item.nome}</span>
+                    <strong>R$ ${item.preco.toFixed(2).replace('.', ',')}</strong>
+                </li>`;
+        });
+
+        checkoutSubtotal.innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+        checkoutTotal.innerText = `R$ ${(subtotal + taxaEntrega).toFixed(2).replace('.', ',')}`;
+    }
+
+    // Lógica para selecionar pagamento
+    let formaPagamento = "Não selecionado";
+    document.querySelectorAll('[data-payment]').forEach(opt => {
+        opt.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // 1. Limpa seleções anteriores
-            paymentOptions.forEach(opt => opt.classList.remove('active'));
-            allPaymentDetails.forEach(detail => detail.style.display = 'none');
-
-            // 2. Ativa a opção atual
-            option.classList.add('active');
-            
-            // 3. Exibe o detalhe correspondente
-            const paymentType = option.getAttribute('data-payment');
-            const targetDetail = document.getElementById(`payment-details-${paymentType}`);
-            
-            if (targetDetail) {
-                targetDetail.style.display = 'block';
-            }
+            formaPagamento = opt.querySelector('span').innerText;
+            // Estilização básica de seleção
+            document.querySelectorAll('[data-payment]').forEach(el => el.classList.remove('active'));
+            opt.classList.add('active');
         });
     });
 
-    // Lógica de Confirmação
-    if (confirmButton) {
-        confirmButton.addEventListener('click', () => {
-            const activePayment = document.querySelector('#payment-options .list-group-item.active');
+    // Botão Confirmar
+    document.getElementById('confirmar-pedido-btn').addEventListener('click', () => {
+        const pedidoFinal = {
+            id: Math.floor(Math.random() * 100000),
+            // CAPTURANDO OS NOVOS CAMPOS:
+            nome: document.getElementById('nome-cliente').value,
+            telefone: document.getElementById('telefone-cliente').value,
+            endereco: document.getElementById('endereco').value,
             
-            if (!activePayment) {
-                alert('Por favor, selecione uma forma de pagamento antes de continuar.');
-                return;
-            }
+            itens: carrinho, // A lista de itens que já fizemos antes
+            subtotal: document.getElementById('checkout-subtotal').innerText,
+            total: document.getElementById('checkout-total').innerText,
+            pagamento: formaPagamento // Definida na lógica de seleção de botões
+        };
+        
+        localStorage.setItem('pedidoFinal', JSON.stringify(pedidoFinal));
+        window.location.href = 'confirmacao_pedido.html';
+    });
 
-            const paymentType = activePayment.getAttribute('data-payment');
-            alert(`Pedido confirmado! Forma de pagamento: ${paymentType.toUpperCase()}`);
-            
-            // Aqui você pode adicionar o redirecionamento ou envio do formulário
-            // window.location.href = "sucesso.html";
-        });
-    }
+    renderizarCarrinho();
 });
