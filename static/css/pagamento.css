@@ -31,3 +31,10 @@ body {
 .list-group-flush .list-group-item {
     border-width: 0;
 }
+
+/* Destaca a forma de pagamento selecionada */
+.list-group-item.active {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000 !important;
+}
