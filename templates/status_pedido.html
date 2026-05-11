@@ -14,6 +14,13 @@
     </style>
 </head>
 <body class="bg-light">
+    
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top p-1">
+        <div class="container">
+        <p class="logonav mb-0 me-2"><img src="../static/img/logo1.jpeg" width="100px" height="100px" alt="logo truckGestão"></p>
+        </div>
+    </nav>
+
     <div class="container py-5">
         <div class="card shadow border-0 text-center p-4">
             <h2 class="fw-bold">Acompanhe seu Pedido</h2>
@@ -47,23 +54,42 @@
 
     <script>
         function atualizarStatus() {
-            const pedido = JSON.parse(localStorage.getItem('pedidoFinal'));
-            if (!pedido) return;
+        const pedido = JSON.parse(localStorage.getItem('pedidoFinal'));
+        if (!pedido) return;
 
-            document.getElementById('resumo-pedido').innerText = `${pedido.itens.length} itens`;
-            document.getElementById('resumo-total').innerText = pedido.total;
+        // Atualiza o resumo
+        document.getElementById('resumo-pedido').innerText = `${pedido.itens.length} itens`;
+        document.getElementById('resumo-total').innerText = pedido.total;
 
-            const status = localStorage.getItem('status_pedido') || 'recebido';
-            
-            if (status === 'preparo') {
-                document.getElementById('step-preparo').classList.add('step-active');
-                document.getElementById('status-text').innerText = 'O chef já está preparando sua comida!';
-            } else if (status === 'entrega') {
-                document.getElementById('step-preparo').classList.add('step-active');
-                document.getElementById('step-entrega').classList.add('step-active');
-                document.getElementById('status-text').innerText = 'Seu pedido saiu para entrega!';
-            }
+        const status = localStorage.getItem('status_pedido') || 'recebido';
+
+        // Elementos das etapas
+        const stepPreparo = document.getElementById('step-preparo');
+        const stepEntrega = document.getElementById('step-entrega');
+        const statusText = document.getElementById('status-text');
+
+        // Reset visual (opcional, bom para testar várias vezes)
+        stepPreparo.classList.remove('step-active');
+        stepEntrega.classList.remove('step-active');
+
+        if (status === 'recebido') {
+            statusText.innerText = 'Aguardando confirmação do restaurante...';
+        } 
+        else if (status === 'preparo') {
+            stepPreparo.classList.add('step-active');
+            statusText.innerText = 'O chef já está preparando sua comida!';
+        } 
+        else if (status === 'entrega') {
+            stepPreparo.classList.add('step-active');
+            stepEntrega.classList.add('step-active');
+            statusText.innerText = 'Seu pedido saiu para entrega!';
         }
+        else if (status === 'cancelado') {
+            statusText.innerText = 'Ops! Seu pedido foi cancelado pelo restaurante.';
+            statusText.classList.add('text-danger');
+        }
+        }
+
         // Checa por atualizações a cada 3 segundos
         setInterval(atualizarStatus, 3000);
         atualizarStatus();

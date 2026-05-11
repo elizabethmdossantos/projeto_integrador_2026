@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
     const taxaEntrega = 5.00;
 
-    // --- 1. MÁSCARA DE TELEFONE (Melhoria do novo integrante) ---
+    // --- MÁSCARA DE TELEFONE ---
     if (inputTelefone) {
         inputTelefone.addEventListener('input', (e) => {
             let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- FUNÇÃO PARA RENDERIZAR O CARRINHO COM BOTÕES + E - ---
     function renderizarCarrinho() {
         if (carrinho.length === 0) {
-            listaItens.innerHTML = '<li class="list-group-item text-center">Carrinho vazio</li>';
+            listaItens.innerHTML = '<li class="list-group-item text-center text-muted py-4">Seu carrinho está vazio</li>';
             checkoutSubtotal.innerText = 'R$ 0,00';
             checkoutTotal.innerText = 'R$ 0,00';
             return;
@@ -26,41 +27,59 @@ document.addEventListener('DOMContentLoaded', () => {
         let subtotal = 0;
 
         carrinho.forEach((item, index) => {
-            subtotal += item.preco;
+            const totalItem = item.preco * item.quantidade;
+            subtotal += totalItem;
+
             listaItens.innerHTML += `
-                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    <div>
-                        <button class="btn btn-sm btn-outline-danger border-0 me-2 btn-remover" data-index="${index}">
-                            <i class="bi bi-trash"></i>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                    <div class="d-flex align-items-center">
+                        <button class="btn p-0 border-0 shadow-none btn-alterar" data-index="${index}" data-acao="diminuir">
+                            <i class="bi ${item.quantidade > 1 ? 'bi-dash-square' : 'bi-trash'} text-danger fs-5"></i>
                         </button>
-                        <span>(1x) ${item.nome}</span>
+                        
+                        <span class="mx-3 fw-bold fs-5" style="min-width: 20px; text-align: center;">${item.quantidade}</span>
+                        
+                        <button class="btn p-0 border-0 shadow-none btn-alterar" data-index="${index}" data-acao="aumentar">
+                            <i class="bi bi-plus-square text-success fs-5"></i>
+                        </button>
+
+                        <span class="ms-3 fw-medium">${item.nome}</span>
                     </div>
-                    <strong>R$ ${item.preco.toFixed(2).replace('.', ',')}</strong>
+                    <strong class="text-dark">R$ ${totalItem.toFixed(2).replace('.', ',')}</strong>
                 </li>`;
         });
 
         checkoutSubtotal.innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
         checkoutTotal.innerText = `R$ ${(subtotal + taxaEntrega).toFixed(2).replace('.', ',')}`;
         
-        adicionarEventosRemover();
+        adicionarEventosBotoes();
     }
 
-    function adicionarEventosRemover() {
-        document.querySelectorAll('.btn-remover').forEach(btn => {
+    // --- LÓGICA DE AUMENTAR / DIMINUIR ---
+    function adicionarEventosBotoes() {
+        document.querySelectorAll('.btn-alterar').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = e.currentTarget.getAttribute('data-index');
-                removerItem(index);
+                const acao = e.currentTarget.getAttribute('data-acao');
+
+                if (acao === 'aumentar') {
+                    carrinho[index].quantidade += 1;
+                } else if (acao === 'diminuir') {
+                    if (carrinho[index].quantidade > 1) {
+                        carrinho[index].quantidade -= 1;
+                    } else {
+                        // Se for 1 e clicar em diminuir, remove o item
+                        carrinho.splice(index, 1);
+                    }
+                }
+
+                localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                renderizarCarrinho();
             });
         });
     }
 
-    function removerItem(index) {
-        carrinho.splice(index, 1);
-        localStorage.setItem('carrinho', JSON.stringify(carrinho));
-        renderizarCarrinho();
-    }
-
-    // Lógica para selecionar pagamento
+    // --- LÓGICA DE PAGAMENTO E CONFIRMAÇÃO ---
     let formaPagamento = "Não selecionado";
     document.querySelectorAll('[data-payment]').forEach(opt => {
         opt.addEventListener('click', (e) => {
@@ -71,55 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 2. BOTÃO CONFIRMAR COM VALIDAÇÕES (Melhoria do novo integrante) ---
     document.getElementById('confirmar-pedido-btn').addEventListener('click', () => {
         const nome = document.getElementById('nome-cliente').value.trim();
         const telefone = document.getElementById('telefone-cliente').value.trim();
         const endereco = document.getElementById('endereco').value.trim();
 
-        // VALIDAÇÃO 1: Nome vazio
-        if (nome === "") {
-            alert("Por favor, digite seu nome.");
+        if (!nome || telefone.length < 14 || !endereco || formaPagamento === "Não selecionado" || carrinho.length === 0) {
+            alert("Por favor, preencha todos os dados, selecione o pagamento e certifique-se de que o carrinho não está vazio.");
             return;
         }
 
-        // VALIDAÇÃO 2: Telefone incompleto
-        if (telefone.length < 14) {
-            alert("Por favor, digite um telefone válido com DDD.");
-            return;
-        }
-
-        // VALIDAÇÃO 3: Endereço vazio
-        if (endereco === "") {
-            alert("Por favor, informe o endereço de entrega.");
-            return;
-        }
-
-        // VALIDAÇÃO 4: Forma de pagamento não selecionada
-        if (formaPagamento === "Não selecionado") {
-            alert("Por favor, selecione uma forma de pagamento.");
-            return;
-        }
-
-        // VALIDAÇÃO 5: Carrinho vazio
-        if (carrinho.length === 0) {
-            alert("Seu carrinho está vazio!");
-            return;
-        }
-
-        // Se passar em tudo, cria o pedido
         const pedidoFinal = {
             id: Math.floor(Math.random() * 100000),
-            nome: nome,
-            telefone: telefone,
-            endereco: endereco,
+            nome, telefone, endereco,
             itens: carrinho,
             subtotal: checkoutSubtotal.innerText,
             total: checkoutTotal.innerText,
             pagamento: formaPagamento
         };
         
-        // Salva e envia para a tela de status (Acompanhamento do cliente)
         localStorage.setItem('pedidoFinal', JSON.stringify(pedidoFinal));
         localStorage.setItem('status_pedido', 'recebido');
         window.location.href = 'status_pedido.html';
