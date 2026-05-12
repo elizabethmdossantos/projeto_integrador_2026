@@ -49,3 +49,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- LÓGICA DE BUSCA EM TEMPO REAL (ITEM 4) ---
+const inputBusca = document.getElementById('cardapio-search');
+
+if (inputBusca) {
+    inputBusca.addEventListener('input', () => {
+        const termoBusca = inputBusca.value.toLowerCase(); // Texto digitado em minúsculo
+        const cards = document.querySelectorAll('.col'); // Seleciona as colunas que envolvem os cards
+
+        cards.forEach((cardColuna) => {
+            // Buscamos o título dentro de cada card
+            const tituloElemento = cardColuna.querySelector('.card-title');
+            
+            if (tituloElemento) {
+                const nomeProduto = tituloElemento.innerText.toLowerCase();
+
+                // Se o nome do produto incluir o que foi digitado, mostra. Caso contrário, esconde.
+                if (nomeProduto.includes(termoBusca)) {
+                    cardColuna.style.display = 'block';
+                } else {
+                    cardColuna.style.display = 'none';
+                }
+            }
+        });
+    });
+}

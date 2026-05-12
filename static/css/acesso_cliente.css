@@ -18,15 +18,22 @@
 }
 
 .card-img-top {
-    height: 180px;
-    object-fit: cover;
+    height: 300px;
+    object-fit: cover; /* Mantém a imagem preenchendo o espaço sem distorcer */
+    width: 100%;
 }
 
 /* 3. Refinamentos Visuais (Opcional, mas melhora a experiência) */
 .card {
     transition: transform 0.3s ease;
+    overflow: hidden;
 }
 
 .card:hover {
     transform: translateY(-5px); /* Feedback visual ao passar o mouse */
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }
