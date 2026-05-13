@@ -53,22 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
         acceptBtn.addEventListener('click', (e) => {
             e.preventDefault(); 
 
-            let valorLimpo = pedido.total.toString().replace("R$", "").replace(/\s/g, "").replace(".", "").replace(",", ".");
-            let totalNumerico = parseFloat(valorLimpo);
+            let historico = JSON.parse(localStorage.getItem('historico_vendas')) || [];
+
+            // LIMPEZA TOTAL DO VALOR (Transforma "R$ 50,00" em 50.00)
+            let valorTexto = pedido.total.toString();
+            let valorLimpo = valorTexto.replace(/[^\d,]/g, '').replace(',', '.');
+            let totalNumerico = parseFloat(valorLimpo) || 0;
+
+            const agora = new Date();
+            const dataLocal = agora.getFullYear() + '-' + 
+                            String(agora.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(agora.getDate()).padStart(2, '0');
 
             const novaVenda = {
                 id: pedido.id,
-                total: totalNumerico,
+                total: totalNumerico, 
                 itens: pedido.itens,
-                data: new Date().toISOString().split('T')[0],
-                hora: new Date().toLocaleTimeString()
+                data: dataLocal,
+                hora: agora.toLocaleTimeString()
             };
 
             historico.push(novaVenda);
             localStorage.setItem('historico_vendas', JSON.stringify(historico));
 
-            localStorage.setItem('status_pedido', 'preparo');
-            alert("Pedido aceito e registrado no histórico!");
+            alert("Pedido aceito e registrado!");
             window.location.href = 'dashboard.html';
         });
     }
