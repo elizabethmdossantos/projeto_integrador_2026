@@ -157,96 +157,91 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NN5SrVh2JQdEtW+YfMXTiCC75mWl5VkfeUKN/9Ig" crossorigin="anonymous"></script>
     
     <script>
-    
-        const mockProducts = [
-            { id: 1, nome: "Cheeseburger Clássico", categoria: "Sanduiches", valor: 22.90, estoque: 50, ingredientes: "Carne, queijo prato, pão de brioche, alface e tomate." },
-            { id: 2, nome: "Calabresa com Mussarela", categoria: "Pizzas", valor: 45.00, estoque: 20, ingredientes: "Molho, mussarela, calabresa fatiada e orégano." },
-            { id: 3, nome: "Coxinha de Frango", categoria: "Salgados", valor: 8.50, estoque: 150, ingredientes: "Massa de batata e recheio cremoso de frango desfiado." },
-            { id: 4, nome: "Suco de Laranja Natural", categoria: "Sucos", valor: 12.00, estoque: 15, ingredientes: "Laranjas frescas e gelo." }, 
-            { id: 5, nome: "Guaraná 350ml", categoria: "Refrigerantes", valor: 7.00, estoque: 200, ingredientes: "Refrigerante lata." },
-            { id: 6, nome: "Brownie de Chocolate", categoria: "Doces", valor: 15.00, estoque: 35, ingredientes: "Chocolate meio amargo e nozes." },
-            { id: 7, nome: "Bacon Crocante (Extra)", categoria: "Adicionais", valor: 5.00, estoque: 120, ingredientes: "Fatias de bacon fritas." },
-            { id: 8, nome: "Sanduíche Vegetariano", categoria: "Sanduiches", valor: 28.00, estoque: 4, ingredientes: "Pão integral, queijo coalho, abobrinha grelhada e pesto." },
-            { id: 9, nome: "Pizza de Frango Catupiry", categoria: "Pizzas", valor: 52.00, estoque: 15, ingredientes: "Molho, mussarela, frango desfiado e Catupiry original." }
-        ];
+        // 1. Carrega os produtos (Prioriza o que está no localStorage, se não houver, usa os iniciais)
+        let produtos = JSON.parse(localStorage.getItem('meusProdutos'));
 
-    
-        const categoryMap = {
-            "Sanduiches": "Sanduiches",
-            "Pizzas": "Pizzas",
-            "Salgados": "Salgados",
-            "Sucos": "Bebidas",
-            "Refrigerantes": "Bebidas",
-            "Doces": "Doces",
-            "Adicionais": "Adicionais"
-        };
-        
-        
-        function createProductCard(produto) {
-            const isLowStock = produto.estoque <= 15;
-            const estoqueClass = isLowStock ? 'estoque-low' : 'text-success';
-            const estoqueIcon = isLowStock ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill';
-            const estoqueText = isLowStock ? `Atenção: ${produto.estoque}` : `Estoque: ${produto.estoque}`;
-
-            return `
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card-produto p-4 shadow-sm border rounded h-100 d-flex flex-column">
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold mb-0 text-dark" style="line-height: 1.2;">${produto.nome}</h5>
-                            <span class="badge bg-danger rounded-pill px-3">${produto.categoria}</span>
-                        </div>
-
-                        <p class="text-secondary small mb-4" style="min-height: 100px;">${produto.ingredientes}</p>
-                        
-                        <div class="row row-lg p-3">
-                            <div class="col-6">
-                                <span class="fw-bold fs-5 text-danger">R$ ${produto.valor.toFixed(2).replace('.', ',')}</span>
-                            </div>
-                            <div class="col-6 text-end">
-                                <span class="${estoqueClass} small fw-medium">
-                                    <i class="bi ${estoqueIcon} me-1"></i> ${estoqueText}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="mt-2 pt-2 d-flex justify-content-end gap-2">
-                            <button class="btn btn-sm btn-outline-secondary px-3"><i class="bi bi-pencil"></i> Editar</button>
-                            <button class="btn btn-sm btn-outline-danger px-3"><i class="bi bi-trash"></i> Excluir</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+        if (!produtos) {
+            produtos = [
+                { id: 1, nome: "Cheeseburger Clássico", categoria: "Sanduiches", valor: 22.90, estoque: 50, ingredientes: "Carne, queijo prato, pão de brioche, alface e tomate." },
+                { id: 2, nome: "Calabresa com Mussarela", categoria: "Pizzas", valor: 45.00, estoque: 20, ingredientes: "Molho, mussarela, calabresa fatiada e orégano." }
+            ];
+            localStorage.setItem('meusProdutos', JSON.stringify(produtos));
         }
 
-    
-        function renderProducts() {
+        const categoryMap = {
+            "Sanduiches": "Sanduiches", 
+            "Pizzas": "Pizzas", 
+            "Salgados": "Salgados",
+            "Sucos": "Bebidas", 
+            "Refrigerantes": "Bebidas", 
+            "Doces": "Doces", 
+            "Adicionais": "Adicionais"
+        };
 
-            document.getElementById('product-list-all').innerHTML = '';
-            document.getElementById('product-list-Sanduiches').innerHTML = '';
-            document.getElementById('product-list-Pizzas').innerHTML = '';
-            document.getElementById('product-list-Salgados').innerHTML = '';
-            document.getElementById('product-list-Bebidas').innerHTML = '';
-            document.getElementById('product-list-Doces').innerHTML = '';
-            document.getElementById('product-list-Adicionais').innerHTML = '';
+        function createProductCard(produto) {
+            const isLowStock = produto.estoque <= 15;
+            const estoqueClass = isLowStock ? 'text-danger fw-bold' : 'text-success';
             
-            mockProducts.forEach(produto => {
+            return `
+                <div class="col-md-6 col-lg-4 mb-4" id="card-${produto.id}">
+                    <div class="card-produto p-4 shadow-sm border rounded h-100 d-flex flex-column bg-white">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="fw-bold mb-0 text-dark">${produto.nome}</h5>
+                            <span class="badge bg-danger rounded-pill">${produto.categoria}</span>
+                        </div>
+                        <p class="text-secondary small mb-4 flex-grow-1">${produto.ingredientes}</p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-bold fs-5 text-danger">R$ ${produto.valor.toFixed(2).replace('.', ',')}</span>
+                            <span class="${estoqueClass} small">
+                                <i class="bi bi-box-seam me-1"></i> Est: ${produto.estoque}
+                            </span>
+                        </div>
+                        <div class="mt-auto pt-2 d-flex justify-content-end gap-2 border-top">
+                            <button onclick="editarProduto(${produto.id})" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                            <button onclick="excluirProduto(${produto.id})" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderProducts() {
+            // Limpar todos os containers
+            const containers = ['all', 'Sanduiches', 'Pizzas', 'Salgados', 'Bebidas', 'Doces', 'Adicionais'];
+            containers.forEach(id => {
+                const el = document.getElementById(`product-list-${id}`);
+                if(el) el.innerHTML = '';
+            });
+
+            console.log("Produtos carregados do storage:", produtos);
+
+            produtos.forEach(produto => {
                 const cardHtml = createProductCard(produto);
-                const displayCategory = categoryMap[produto.categoria];
-
-    
                 document.getElementById('product-list-all').innerHTML += cardHtml;
-
+                
+                const displayCategory = categoryMap[produto.categoria];
                 if (displayCategory) {
-                    const targetElement = document.getElementById(`product-list-${displayCategory}`);
-                    if (targetElement) {
-                        targetElement.innerHTML += cardHtml;
-                    }
+                    const target = document.getElementById(`product-list-${displayCategory}`);
+                    if (target) target.innerHTML += cardHtml;
                 }
             });
         }
-        window.onload = renderProducts;
 
+        // FUNÇÃO EXCLUIR
+        function excluirProduto(id) {
+            if (confirm("Tem certeza que deseja excluir este produto?")) {
+                produtos = produtos.filter(p => p.id !== id);
+                localStorage.setItem('meusProdutos', JSON.stringify(produtos));
+                renderProducts();
+            }
+        }
+
+        // FUNÇÃO EDITAR
+        function editarProduto(id) {
+            // Redireciona para o cadastro enviando o ID como parâmetro na URL
+            window.location.href = `cadastro_produto.html?edit=${id}`;
+        }
+
+        window.onload = renderProducts;
     </script>
 </body>
 
