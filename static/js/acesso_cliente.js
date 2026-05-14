@@ -1,24 +1,37 @@
-// Inicializa o carrinho vazio ou recupera o existente
+(function () {
+    'use strict'
+    // 1. VALIDAÇÃO DE FORMULÁRIOS (Bootstrap)
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+// Inicializa o carrinho: tenta buscar do LocalStorage, se não existir, cria um array vazio
 let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
+// 2. LÓGICA DE ADICIONAR AO CARRINHO
 document.querySelectorAll('.btn-warning').forEach((botao) => {
     botao.addEventListener('click', () => {
         const card = botao.closest('.card-body');
         const nome = card.querySelector('.card-title').innerText;
         const precoTexto = card.querySelector('.product-price').innerText;
         
-        // Remove o "R$" e converte para número
+        // Converte "R$ 25,00" para o número 25.00
         const preco = parseFloat(precoTexto.replace('R$', '').replace(',', '.').trim());
 
-        // --- LÓGICA DE AGRUPAMENTO (ITEM 3) ---
-        // Verifica se esse produto já existe na lista
+        // Verifica se o produto já está no carrinho para agrupar
         const itemExistente = carrinho.find(item => item.nome === nome);
 
         if (itemExistente) {
-            // Se já existe, apenas aumenta a quantidade
             itemExistente.quantidade += 1;
         } else {
-            // Se não existe, adiciona o objeto com quantidade inicial 1
             carrinho.push({ 
                 nome: nome, 
                 preco: preco, 
@@ -26,20 +39,29 @@ document.querySelectorAll('.btn-warning').forEach((botao) => {
             });
         }
         
-        // Salva no LocalStorage
+        // Salva a lista atualizada no navegador
         localStorage.setItem('carrinho', JSON.stringify(carrinho));
         
-        alert(`${nome} adicionado ao carrinho!`);
+        // --- MELHORIA 1: FEEDBACK VISUAL NO BOTÃO ---
+        const textoOriginal = botao.innerHTML;
+        botao.innerText = "Adicionado! ✓";
+        botao.classList.replace('btn-warning', 'btn-success'); // Muda a cor para verde
+        botao.disabled = true; // Desabilita temporariamente para evitar cliques duplos
+
+        setTimeout(() => {
+            botao.innerHTML = textoOriginal;
+            botao.classList.replace('btn-success', 'btn-warning'); // Volta para a cor original
+            botao.disabled = false;
+        }, 1500); // O feedback dura 1.5 segundos
     });
 });
 
-// --- VALIDAÇÃO DO CARRINHO ---
+// 3. VALIDAÇÃO ANTES DE IR PARA O PAGAMENTO
 document.addEventListener('DOMContentLoaded', () => {
     const linkPagamento = document.querySelector('a[href="pagamento.html"]');
 
     if (linkPagamento) {
         linkPagamento.addEventListener('click', (e) => {
-            // Pegamos o carrinho mais atualizado
             const itensNoCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
             
             if (itensNoCarrinho.length === 0) {
@@ -50,24 +72,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- LÓGICA DE BUSCA EM TEMPO REAL (ITEM 4) ---
+// 4. LÓGICA DE BUSCA EM TEMPO REAL
 const inputBusca = document.getElementById('cardapio-search');
 
 if (inputBusca) {
     inputBusca.addEventListener('input', () => {
-        const termoBusca = inputBusca.value.toLowerCase(); // Texto digitado em minúsculo
-        const cards = document.querySelectorAll('.col'); // Seleciona as colunas que envolvem os cards
+        const termoBusca = inputBusca.value.toLowerCase();
+        const cards = document.querySelectorAll('.col'); 
 
         cards.forEach((cardColuna) => {
-            // Buscamos o título dentro de cada card
             const tituloElemento = cardColuna.querySelector('.card-title');
             
             if (tituloElemento) {
                 const nomeProduto = tituloElemento.innerText.toLowerCase();
 
-                // Se o nome do produto incluir o que foi digitado, mostra. Caso contrário, esconde.
+                // --- MELHORIA 2: DISPLAY CORRIGIDO ---
+                // Usamos '' (vazio) em vez de 'block' para que o navegador use o 
+                // comportamento padrão do elemento (flex, grid, etc) definido no CSS/Bootstrap.
                 if (nomeProduto.includes(termoBusca)) {
-                    cardColuna.style.display = 'block';
+                    cardColuna.style.display = ''; 
                 } else {
                     cardColuna.style.display = 'none';
                 }
